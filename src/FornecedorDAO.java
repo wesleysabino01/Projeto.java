@@ -43,7 +43,7 @@ public class FornecedorDAO {
         
     }  
    public Fornecedor getFornecedor(int id) {
-        String sql = "SELECT * from pessoa Where for_idFornecedores= ?";
+        String sql = "SELECT * from fornecedores Where for_idFornecedores= ?";
         
         try{
             PreparedStatement stmt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE); 
