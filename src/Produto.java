@@ -9,11 +9,15 @@ public class Produto {
     private String categoria;
     private String nome;
     private float peso; 
-    private String codigodebarra; 
+    private String codigodebarra;  
+     
 
     /**
+     *  
      * @return the idcategoria
-     */
+     */ 
+     
+    
     public int getIdcategoria() {
         return idcategoria;
     }
@@ -79,7 +83,12 @@ public class Produto {
      */
     public void setCodigodebarra(String codigodebarra) {
         this.codigodebarra = codigodebarra;
-    }
+    } 
+    
+    @Override
+public String toString() {
+    return nome + " (" + codigodebarra + ")";
+}
     
     
     

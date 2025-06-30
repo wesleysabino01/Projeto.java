@@ -5,7 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
-
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -95,6 +96,30 @@ public class ProdutoDAO {
             System.out.println("ERRO AI EXCLUIR PRODUTO"+ex.getMessage());
         }
         
+    } 
+  
+
+        public List<Produto> listarProdutos() {
+    List<Produto> lista = new ArrayList<>();
+    String sql = "SELECT * FROM produto";
+
+    try {
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Produto p = new Produto();
+            p.setCodigodebarra(rs.getString("pro_codigoDeBarra"));
+            p.setNome(rs.getString("pro_nome"));
+            p.setPeso(rs.getFloat("pro_peso"));
+            p.setIdcategoria(rs.getInt("Categoria_cat_idCategoria"));
+            lista.add(p);
+        }
+    } catch (SQLException ex) {
+        System.out.println("Erro ao listar produtos: " + ex.getMessage());
     }
+
+    return lista;
+}
 
 } 

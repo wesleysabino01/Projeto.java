@@ -2,90 +2,83 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
+import java.sql.Statement;
 
-/**
- *
- * @author 2830482321037
- */
-public class notaCDAO { 
-    
-      private conexao conexao; 
-    private Connection conn;  
-    
-     public notaCDAO () {
-        this.conexao = new conexao ();
+public class notaCDAO {
+
+    private conexao conexao;
+    private Connection conn;
+
+    public notaCDAO() {
+        this.conexao = new conexao();
         this.conn = this.conexao.getconexao();
-    
-}   
-      public void inserir (notaC notacabecario ){
-        String sql = "INSERT INTO notacabecario (notac_id,notac_data,notac_VlrTotal)VALUES (?,?,?);";
-        
-        try { 
-                PreparedStatement stmt = this.conn.prepareStatement(sql);
-                stmt.setInt (1,notacabecario. getId());
-                stmt.setString(2,notacabecario.getData()); 
-                stmt.setFloat (3, notacabecario.getVlrTotal());
-              
-                
-                stmt.execute();
-        } 
-          catch (SQLException ex) {
-            System.out.println("ERRO na nota de cabecario:"+ ex.getMessage());
-        }        
+    }
 
-}  public notaC getNotac(int id) {
-        String sql = "SELECT * from notacabecario Where notac_id= ?";
-        
-        try{
-            PreparedStatement stmt = conn.prepareStatement(sql,ResultSet.TYPE_SCROLL_INSENSITIVE,ResultSet.CONCUR_UPDATABLE); 
-            stmt.setInt(1,id); 
+    public int inserir(notaC nota) throws SQLException {
+        String sql = "INSERT INTO nota_cabecario (data, vlr_total) VALUES (?, ?)";
+        PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
+        stmt.setString(1, nota.getData());
+        stmt.setFloat(2, nota.getVlrTotal());
+        stmt.executeUpdate();
+
+        ResultSet rs = stmt.getGeneratedKeys();
+        int generatedId = -1;
+        if (rs.next()) {
+            generatedId = rs.getInt(1);
+        }
+        rs.close();
+        stmt.close();
+        return generatedId;
+    }
+
+    public notaC getNotac(int id) {
+        String sql = "SELECT * FROM notacabecario WHERE notac_id= ?";
+        try {
+            PreparedStatement stmt = conn.prepareStatement(sql, ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+            stmt.setInt(1, id);
             ResultSet rs = stmt.executeQuery();
-            notaC n = new notaC(); 
-            rs.first();
-            n.setId(id);
-            n.setData(rs.getString("notac_data"));
-            n.setVlrTotal(rs.getFloat("notac_VlrTotal")); 
-             n.setId(rs.getInt("notac_id")); 
-            
-            return n;       
-            
-            
-        } catch (SQLException ex) {
-        System.out.println("ERRO ao gerar nota cabecario "+ ex.getMessage()); 
-        } 
-        return null;
-    }     
 
-public void editar(notaC notacabecario) {
-        
-        try {
-            String sql = "UPDATE notacabecario set notac_id=?, notac_data=?, notac_VlrTotal=? WHERE notac_id=?"; 
-            
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1,notacabecario.getId());
-            stmt.setString(2,notacabecario.getData()); 
-            stmt.setFloat(3,notacabecario.getVlrTotal());
-          
-            stmt.execute (); 
-            
-        }  catch (SQLException ex) {
-            System.out.println("ERRO ao gerar nota cabecario "+ ex.getMessage()); 
-        }
-         
-} 
-  public void excluir ( int id) {
-        try {
-            String sql = "delete from notacabecario WHERE notac_id=?";
-            
-            PreparedStatement stmt = conn.prepareStatement(sql);
-            stmt.setInt(1,id);
-            stmt.execute(); 
-            
+            if (rs.next()) {
+                notaC n = new notaC();
+                n.setId(rs.getInt("notac_id"));
+                n.setData(rs.getString("notac_data"));
+                n.setVlrTotal(rs.getFloat("notac_VlrTotal"));
+                rs.close();
+                stmt.close();
+                return n;
+            }
+            rs.close();
+            stmt.close();
         } catch (SQLException ex) {
-            System.out.println("ERRO AO GERAR NOTA CABECARIO"+ex.getMessage());
+            System.out.println("ERRO ao buscar nota cabecario " + ex.getMessage());
         }
-  }
+        return null;
+    }
+
+    public void editar(notaC notacabecario) {
+        try {
+            String sql = "UPDATE notacabecario SET notac_data=?, notac_VlrTotal=? WHERE notac_id=?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, notacabecario.getData());
+            stmt.setFloat(2, notacabecario.getVlrTotal());
+            stmt.setInt(3, notacabecario.getId());
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println("ERRO ao editar nota cabecario " + ex.getMessage());
+        }
+    }
+
+    public void excluir(int id) {
+        try {
+            String sql = "DELETE FROM notacabecario WHERE notac_id=?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setInt(1, id);
+            stmt.executeUpdate();
+            stmt.close();
+        } catch (SQLException ex) {
+            System.out.println("ERRO ao excluir nota cabecario " + ex.getMessage());
+        }
+    }
 }
 

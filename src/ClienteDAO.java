@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -88,6 +90,28 @@ public void inserir (Cliente cliente){
             System.out.println("ERRO AI EXCLUIR Cliente"+ex.getMessage());
         }
         
+    }  
+          public List<Cliente> listarClientes() {
+    List<Cliente> lista = new ArrayList<>();
+    String sql = "SELECT * FROM cliente";
+
+    try {
+        PreparedStatement stmt = conn.prepareStatement(sql);
+        ResultSet rs = stmt.executeQuery();
+
+        while (rs.next()) {
+            Cliente c = new Cliente();
+            c.setCpf(rs.getString("cli_cpf"));
+            c.setNome(rs.getString("cli_nome"));
+            c.setEmail(rs.getString("cli_email"));
+            lista.add(c);
+        }
+    } catch (SQLException ex) {
+        System.out.println("Erro ao listar clientes: " + ex.getMessage());
     }
+
+    return lista;
+}
+          
 
 }

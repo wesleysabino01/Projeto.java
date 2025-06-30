@@ -73,6 +73,12 @@ public class Jproduto extends javax.swing.JFrame {
 
         jLabel5.setText("CADASTRO DE PRODUTO");
 
+        Jcombo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JcomboActionPerformed(evt);
+            }
+        });
+
         jButton2.setText("Voltar");
         jButton2.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -162,6 +168,10 @@ pDAO.inserir(p);
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 this.dispose();        // TODO add your handling code here:
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void JcomboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_JcomboActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_JcomboActionPerformed
 
     /**
      * @param args the command line arguments
